@@ -35,18 +35,29 @@ class Prediction {
   List<String>? types;
   String? lat;
   String? lng;
+  String? city;
+  String? postalCode;
+  String? countryCode;
+  String? countryName;
+  String? street;
 
-  Prediction(
-      {this.description,
-      this.id,
-      this.matchedSubstrings,
-      this.placeId,
-      this.reference,
-      this.structuredFormatting,
-      this.terms,
-      this.types,
-      this.lat,
-      this.lng});
+  Prediction({
+    this.description,
+    this.id,
+    this.matchedSubstrings,
+    this.placeId,
+    this.reference,
+    this.structuredFormatting,
+    this.terms,
+    this.types,
+    this.lat,
+    this.lng,
+    this.city,
+    this.postalCode,
+    this.countryCode,
+    this.countryName,
+    this.street,
+  });
 
   Prediction.fromJson(Map<String, dynamic> json) {
     description = json['description'];
