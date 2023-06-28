@@ -388,6 +388,7 @@ class _GooglePlacesAutoCompleteTextFormFieldState
 
       prediction.lat = placeDetails.result!.geometry!.location!.lat.toString();
       prediction.lng = placeDetails.result!.geometry!.location!.lng.toString();
+      prediction.utcOffset = placeDetails.result!.utcOffset;
 
       final nullableAddressComponents = List<AddressComponents?>.of(
           placeDetails.result!.addressComponents ?? []);

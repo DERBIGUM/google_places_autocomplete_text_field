@@ -40,6 +40,7 @@ class Prediction {
   String? countryCode;
   String? countryName;
   String? street;
+  int? utcOffset;
 
   Prediction({
     this.description,
@@ -57,6 +58,7 @@ class Prediction {
     this.countryCode,
     this.countryName,
     this.street,
+    this.utcOffset,
   });
 
   Prediction.fromJson(Map<String, dynamic> json) {
