@@ -355,38 +355,43 @@ class _GooglePlacesAutoCompleteTextFormFieldState
     _overlayEntry!.markNeedsBuild();
   }
 
-  Future<TimeZoneData> getTimeZoneData(double lat, double lng) async {
-    Uri actualUrl = Uri(
-      scheme: 'https',
-      host: 'maps.googleapis.com',
-      path: '/maps/api/timezone/json',
-      queryParameters: {
-        'location': Uri.encodeComponent('$lat,$lng'),
-        'timestamp': (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString(),
-        'key': widget.googleAPIKey,
-      },
-    );
-    String proxiedUrl;
-    if (widget.proxyURL == null) {
-      proxiedUrl = actualUrl.toString();
-    } else {
-      final offsetUri = Uri.parse(widget.proxyURL!);
-      proxiedUrl = Uri(
-        scheme: offsetUri.scheme,
-        host: offsetUri.host,
-        port: offsetUri.port,
-        path: offsetUri.path,
+  Future<TimeZoneData?> getTimeZoneData(double lat, double lng) async {
+    try {
+      Uri actualUrl = Uri(
+        scheme: 'https',
+        host: 'maps.googleapis.com',
+        path: '/maps/api/timezone/json',
         queryParameters: {
-          'u': actualUrl.toString(),
+          'location': Uri.encodeComponent('$lat,$lng'),
+          'timestamp':
+              (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString(),
+          'key': widget.googleAPIKey,
         },
-      ).toString();
+      );
+      String proxiedUrl;
+      if (widget.proxyURL == null) {
+        proxiedUrl = actualUrl.toString();
+      } else {
+        final offsetUri = Uri.parse(widget.proxyURL!);
+        proxiedUrl = Uri(
+          scheme: offsetUri.scheme,
+          host: offsetUri.host,
+          port: offsetUri.port,
+          path: offsetUri.path,
+          queryParameters: {
+            'u': actualUrl.toString(),
+          },
+        ).toString();
+      }
+
+      final response = await _dio.get(
+        proxiedUrl,
+      );
+
+      return TimeZoneData.fromJson(response.data);
+    } catch (e) {
+      return null;
     }
-
-    final response = await _dio.get(
-      proxiedUrl,
-    );
-
-    return TimeZoneData.fromJson(response.data);
   }
 
   Future<void> getPlaceDetailsFromPlaceId(Prediction prediction) async {
