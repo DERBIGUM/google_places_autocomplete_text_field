@@ -362,7 +362,7 @@ class _GooglePlacesAutoCompleteTextFormFieldState
       path: '/maps/api/timezone/json',
       queryParameters: {
         'location': Uri.encodeComponent('$lat,$lng'),
-        'timestamp': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        'timestamp': (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString(),
         'key': widget.googleAPIKey,
       },
     );
