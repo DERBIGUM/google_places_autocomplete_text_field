@@ -33,14 +33,18 @@ class Prediction {
   StructuredFormatting? structuredFormatting;
   List<Terms>? terms;
   List<String>? types;
-  String? lat;
-  String? lng;
+  double? lat;
+  double? lng;
   String? city;
   String? postalCode;
   String? countryCode;
   String? countryName;
   String? street;
   int? utcOffset;
+  String? timeZoneId;
+  String? timeZoneName;
+  int? dstOffset;
+  int? rawOffset;
 
   Prediction({
     this.description,
@@ -59,6 +63,10 @@ class Prediction {
     this.countryName,
     this.street,
     this.utcOffset,
+    this.timeZoneId,
+    this.timeZoneName,
+    this.dstOffset,
+    this.rawOffset,
   });
 
   Prediction.fromJson(Map<String, dynamic> json) {

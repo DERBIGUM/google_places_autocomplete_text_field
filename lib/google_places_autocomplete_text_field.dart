@@ -10,6 +10,8 @@ import 'package:google_places_autocomplete_text_field/model/place_details.dart';
 import 'package:google_places_autocomplete_text_field/model/prediction.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'model/time_zone_data.dart';
+
 class GooglePlacesAutoCompleteTextFormField extends StatefulWidget {
   final String? initialValue;
   final FocusNode? focusNode;
@@ -353,6 +355,40 @@ class _GooglePlacesAutoCompleteTextFormFieldState
     _overlayEntry!.markNeedsBuild();
   }
 
+  Future<TimeZoneData> getTimeZoneData(double lat, double lng) async {
+    Uri actualUrl = Uri(
+      scheme: 'https',
+      host: 'maps.googleapis.com',
+      path: '/maps/api/timezone/json',
+      queryParameters: {
+        'location': '$lat,$lng',
+        'timestamp': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        'key': widget.googleAPIKey,
+      },
+    );
+    String proxiedUrl;
+    if (widget.proxyURL == null) {
+      proxiedUrl = actualUrl.toString();
+    } else {
+      final offsetUri = Uri.parse(widget.proxyURL!);
+      proxiedUrl = Uri(
+        scheme: offsetUri.scheme,
+        host: offsetUri.host,
+        port: offsetUri.port,
+        path: offsetUri.path,
+        queryParameters: {
+          'u': actualUrl.toString(),
+        },
+      ).toString();
+    }
+
+    final response = await _dio.get(
+      proxiedUrl,
+    );
+
+    return TimeZoneData.fromJson(response.data);
+  }
+
   Future<void> getPlaceDetailsFromPlaceId(Prediction prediction) async {
     try {
       Uri actualUrl = Uri(
@@ -386,9 +422,22 @@ class _GooglePlacesAutoCompleteTextFormFieldState
 
       final placeDetails = PlaceDetails.fromJson(response.data);
 
-      prediction.lat = placeDetails.result!.geometry!.location!.lat.toString();
-      prediction.lng = placeDetails.result!.geometry!.location!.lng.toString();
+      prediction.lat = placeDetails.result!.geometry!.location!.lat;
+      prediction.lng = placeDetails.result!.geometry!.location!.lng;
       prediction.utcOffset = placeDetails.result!.utcOffset;
+
+      final timeZoneData = prediction.lat == null || prediction.lng == null
+          ? null
+          : await getTimeZoneData(
+              prediction.lat!,
+              prediction.lng!,
+            );
+      if (timeZoneData?.status == 'OK') {
+        prediction.timeZoneId = timeZoneData?.timeZoneId;
+        prediction.timeZoneName = timeZoneData?.timeZoneName;
+        prediction.rawOffset = timeZoneData?.rawOffset;
+        prediction.dstOffset = timeZoneData?.dstOffset;
+      }
 
       final nullableAddressComponents = List<AddressComponents?>.of(
           placeDetails.result!.addressComponents ?? []);
