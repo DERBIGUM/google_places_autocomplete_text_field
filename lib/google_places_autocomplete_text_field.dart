@@ -430,7 +430,7 @@ class _GooglePlacesAutoCompleteTextFormFieldState
 
       prediction.lat = placeDetails.result!.geometry!.location!.lat;
       prediction.lng = placeDetails.result!.geometry!.location!.lng;
-      prediction.utcOffset = placeDetails.result!.utcOffset;
+      prediction.utcOffsetInMinutes = placeDetails.result!.utcOffset;
 
       final timeZoneData = prediction.lat == null || prediction.lng == null
           ? null
@@ -441,8 +441,8 @@ class _GooglePlacesAutoCompleteTextFormFieldState
       if (timeZoneData?.status == 'OK') {
         prediction.timeZoneId = timeZoneData?.timeZoneId;
         prediction.timeZoneName = timeZoneData?.timeZoneName;
-        prediction.rawOffset = timeZoneData?.rawOffset;
-        prediction.dstOffset = timeZoneData?.dstOffset;
+        prediction.rawOffsetInSeconds = timeZoneData?.rawOffset;
+        prediction.dstOffsetInSeconds = timeZoneData?.dstOffset;
       }
 
       final nullableAddressComponents = List<AddressComponents?>.of(
