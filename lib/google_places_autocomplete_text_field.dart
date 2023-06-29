@@ -362,12 +362,13 @@ class _GooglePlacesAutoCompleteTextFormFieldState
         host: 'maps.googleapis.com',
         path: '/maps/api/timezone/json',
         queryParameters: {
-          'location': Uri.encodeComponent('$lat,$lng'),
+          'location': '$lat,$lng',
           'timestamp':
               (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString(),
           'key': widget.googleAPIKey,
         },
       );
+      debugPrint(actualUrl.toString());
       String proxiedUrl;
       if (widget.proxyURL == null) {
         proxiedUrl = actualUrl.toString();
