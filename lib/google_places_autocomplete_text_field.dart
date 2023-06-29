@@ -361,7 +361,7 @@ class _GooglePlacesAutoCompleteTextFormFieldState
       host: 'maps.googleapis.com',
       path: '/maps/api/timezone/json',
       queryParameters: {
-        'location': '$lat,$lng',
+        'location': Uri.encodeComponent('$lat,$lng'),
         'timestamp': DateTime.now().millisecondsSinceEpoch ~/ 1000,
         'key': widget.googleAPIKey,
       },
