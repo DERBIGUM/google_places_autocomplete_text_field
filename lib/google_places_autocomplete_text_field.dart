@@ -453,6 +453,10 @@ class _GooglePlacesAutoCompleteTextFormFieldState
           .firstWhere((element) => element!.types!.contains('route'),
               orElse: () => null)
           ?.longName;
+      prediction.streetNumber = nullableAddressComponents
+          .firstWhere((element) => element!.types!.contains('street_number'),
+              orElse: () => null)
+          ?.longName;
       prediction.postalCode = nullableAddressComponents
           .firstWhere((element) => element!.types!.contains('postal_code'),
               orElse: () => null)

@@ -41,6 +41,7 @@ class Prediction {
   String? countryCode;
   String? countryName;
   String? street;
+  String? streetNumber;
   int? utcOffsetInMinutes;
   String? timeZoneId;
   String? timeZoneName;
@@ -65,6 +66,7 @@ class Prediction {
     this.countryCode,
     this.countryName,
     this.street,
+    this.streetNumber,
     this.utcOffsetInMinutes,
     this.timeZoneId,
     this.timeZoneName,
