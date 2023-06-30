@@ -447,6 +447,7 @@ class _GooglePlacesAutoCompleteTextFormFieldState
         prediction.dstOffsetInSeconds = timeZoneData?.dstOffset;
       }
 
+      prediction.formattedAddress = placeDetails.result!.formattedAddress;
       final nullableAddressComponents = List<AddressComponents?>.of(
           placeDetails.result!.addressComponents ?? []);
       prediction.street = nullableAddressComponents

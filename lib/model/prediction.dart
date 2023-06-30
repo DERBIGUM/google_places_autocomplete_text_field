@@ -40,6 +40,7 @@ class Prediction {
   String? postalCode;
   String? countryCode;
   String? countryName;
+  String? formattedAddress;
   String? street;
   String? streetNumber;
   int? utcOffsetInMinutes;
@@ -65,6 +66,7 @@ class Prediction {
     this.postalCode,
     this.countryCode,
     this.countryName,
+    this.formattedAddress,
     this.street,
     this.streetNumber,
     this.utcOffsetInMinutes,
