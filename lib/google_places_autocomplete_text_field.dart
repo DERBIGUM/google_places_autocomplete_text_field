@@ -432,6 +432,7 @@ class _GooglePlacesAutoCompleteTextFormFieldState
       prediction.lat = placeDetails.result!.geometry!.location!.lat;
       prediction.lng = placeDetails.result!.geometry!.location!.lng;
       prediction.utcOffsetInMinutes = placeDetails.result!.utcOffset;
+      prediction.url = placeDetails.result!.url;
 
       final timeZoneData = prediction.lat == null || prediction.lng == null
           ? null

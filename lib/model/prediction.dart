@@ -46,6 +46,7 @@ class Prediction {
   String? timeZoneName;
   int? dstOffsetInSeconds;
   int? rawOffsetInSeconds;
+  String? url;
 
   Prediction({
     this.name,
@@ -69,6 +70,7 @@ class Prediction {
     this.timeZoneName,
     this.dstOffsetInSeconds,
     this.rawOffsetInSeconds,
+    this.url,
   });
 
   Prediction.fromJson(Map<String, dynamic> json) {
@@ -95,6 +97,7 @@ class Prediction {
     types = json['types'].cast<String>();
     lat = json['lat'];
     lng = json['lng'];
+    url = json['url'];
   }
 
   Map<String, dynamic> toJson() {
@@ -117,6 +120,7 @@ class Prediction {
     data['types'] = types;
     data['lat'] = lat;
     data['lng'] = lng;
+    data['url'] = url;
 
     return data;
   }
