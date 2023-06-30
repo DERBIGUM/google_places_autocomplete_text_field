@@ -428,6 +428,7 @@ class _GooglePlacesAutoCompleteTextFormFieldState
 
       final placeDetails = PlaceDetails.fromJson(response.data);
 
+      prediction.name = placeDetails.result!.name;
       prediction.lat = placeDetails.result!.geometry!.location!.lat;
       prediction.lng = placeDetails.result!.geometry!.location!.lng;
       prediction.utcOffsetInMinutes = placeDetails.result!.utcOffset;

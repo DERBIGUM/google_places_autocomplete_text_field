@@ -25,6 +25,7 @@ class PlacesAutocompleteResponse {
 }
 
 class Prediction {
+  String? name;
   String? description;
   String? id;
   List<MatchedSubstrings>? matchedSubstrings;
@@ -47,6 +48,7 @@ class Prediction {
   int? rawOffsetInSeconds;
 
   Prediction({
+    this.name,
     this.description,
     this.id,
     this.matchedSubstrings,
@@ -70,6 +72,7 @@ class Prediction {
   });
 
   Prediction.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
     description = json['description'];
     id = json['id'];
     if (json['matched_substrings'] != null) {
@@ -96,6 +99,7 @@ class Prediction {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
     data['description'] = description;
     data['id'] = id;
     if (matchedSubstrings != null) {
