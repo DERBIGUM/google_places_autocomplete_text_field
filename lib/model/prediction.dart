@@ -128,6 +128,24 @@ class Prediction {
 
     return data;
   }
+
+  String get streetAndNumber {
+    if (formattedAddress != null) {
+      if (formattedAddress!.contains(',')) {
+        return formattedAddress!.split(',').first.trim();
+      } else {
+        return formattedAddress!;
+      }
+    } else if (street != null && streetNumber != null) {
+      if (countryCode == 'BE') {
+        return '${(street ?? '')} ${(streetNumber ?? '')}';
+      } else {
+        return '${(streetNumber ?? '')} ${(street ?? '')}';
+      }
+    } else {
+      return street ?? '';
+    }
+  }
 }
 
 class MatchedSubstrings {
