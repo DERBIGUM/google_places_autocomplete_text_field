@@ -1,9 +1,6 @@
 library google_places_autocomplete_text_field;
 
-import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_places_autocomplete_text_field/model/place_details.dart';
@@ -67,7 +64,6 @@ class GooglePlacesAutoCompleteTextFormField extends StatefulWidget {
   final InputDecoration? inputDecoration;
   final ItemClick? itmClick;
   final GetPlaceDetailsWithLatLng? getPlaceDetailWithLatLng;
-  final bool isLatLngRequired;
   final String googleAPIKey;
   final int debounceTime;
   final List<String>? countries;
@@ -84,7 +80,6 @@ class GooglePlacesAutoCompleteTextFormField extends StatefulWidget {
     this.debounceTime = 600,
     this.inputDecoration,
     this.itmClick,
-    this.isLatLngRequired = true,
     this.countries = const [],
     this.getPlaceDetailWithLatLng,
     this.predictionsStyle,
@@ -158,6 +153,7 @@ class _GooglePlacesAutoCompleteTextFormFieldState
 
   final Dio _dio = Dio();
   late FocusNode _focus;
+  bool _loadingPlaceDetails = false;
 
   @override
   void initState() {
@@ -168,13 +164,13 @@ class _GooglePlacesAutoCompleteTextFormFieldState
 
     _focus = widget.focusNode ?? FocusNode();
 
-    if (!kIsWeb && !Platform.isMacOS) {
-      _focus.addListener(() {
-        if (!_focus.hasFocus) {
-          removeOverlay();
-        }
-      });
-    }
+    //if (!kIsWeb && !Platform.isMacOS) {
+    _focus.addListener(() {
+      if (!_focus.hasFocus) {
+        removeOverlay();
+      }
+    });
+    //}
 
     super.initState();
   }
@@ -187,7 +183,20 @@ class _GooglePlacesAutoCompleteTextFormFieldState
         controller: widget.textEditingController,
         initialValue: widget.initialValue,
         focusNode: _focus,
-        decoration: widget.inputDecoration,
+        decoration:
+            (widget.inputDecoration ?? const InputDecoration()).copyWith(
+          suffixIcon: _loadingPlaceDetails
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(),
+                )
+              : null,
+          suffixIconConstraints: const BoxConstraints(
+            maxHeight: 16,
+            maxWidth: 16,
+          ),
+        ),
         keyboardType: widget.keyboardType,
         textCapitalization: widget.textCapitalization,
         textInputAction: widget.textInputAction,
@@ -241,6 +250,9 @@ class _GooglePlacesAutoCompleteTextFormFieldState
   }
 
   Future<void> getLocation(String text) async {
+    setState(() {
+      _loadingPlaceDetails = true;
+    });
     Uri actualUrl = Uri(
       scheme: 'https',
       host: 'maps.googleapis.com',
@@ -272,6 +284,10 @@ class _GooglePlacesAutoCompleteTextFormFieldState
 
     final subscriptionResponse =
         PlacesAutocompleteResponse.fromJson(response.data);
+
+    setState(() {
+      _loadingPlaceDetails = false;
+    });
 
     if (text.isEmpty) {
       allPredictions.clear();
@@ -328,14 +344,12 @@ class _GooglePlacesAutoCompleteTextFormFieldState
       itemCount: allPredictions.length,
       itemBuilder: (BuildContext context, int index) => InkWell(
         onTap: () {
-          if (index < allPredictions.length) {
-            widget.itmClick!(allPredictions[index]);
-            if (!widget.isLatLngRequired) return;
-
-            getPlaceDetailsFromPlaceId(allPredictions[index]);
-
-            removeOverlay();
+          final prediction = allPredictions[index];
+          widget.itmClick!(prediction);
+          if (widget.getPlaceDetailWithLatLng != null) {
+            getPlaceDetailsFromPlaceId(prediction);
           }
+          removeOverlay();
         },
         child: Container(
           padding: const EdgeInsets.all(10),
@@ -396,6 +410,9 @@ class _GooglePlacesAutoCompleteTextFormFieldState
   }
 
   Future<void> getPlaceDetailsFromPlaceId(Prediction prediction) async {
+    setState(() {
+      _loadingPlaceDetails = true;
+    });
     try {
       Uri actualUrl = Uri(
         scheme: 'https',
@@ -478,6 +495,10 @@ class _GooglePlacesAutoCompleteTextFormFieldState
       widget.getPlaceDetailWithLatLng!(prediction);
     } catch (e) {
       rethrow;
+    } finally {
+      setState(() {
+        _loadingPlaceDetails = false;
+      });
     }
   }
 }
