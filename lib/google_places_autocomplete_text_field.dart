@@ -1,6 +1,7 @@
 library google_places_autocomplete_text_field;
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_places_autocomplete_text_field/model/place_details.dart';
@@ -167,7 +168,18 @@ class _GooglePlacesAutoCompleteTextFormFieldState
     //if (!kIsWeb && !Platform.isMacOS) {
     _focus.addListener(() {
       if (!_focus.hasFocus) {
-        removeOverlay();
+        if (kIsWeb) {
+          //On the web, the mere fact on clicking one of the overlay items removes focus
+          //from the field, so by the time onTap triggers, there is nothing to do anymore
+          Future.delayed(
+            const Duration(milliseconds: 200),
+            () {
+              removeOverlay();
+            },
+          );
+        } else {
+          removeOverlay();
+        }
       }
     });
     //}
@@ -342,21 +354,19 @@ class _GooglePlacesAutoCompleteTextFormFieldState
       padding: EdgeInsets.zero,
       shrinkWrap: true,
       itemCount: allPredictions.length,
-      itemBuilder: (BuildContext context, int index) => InkWell(
-        onTap: () {
+      itemBuilder: (BuildContext context, int index) => ListTile(
+        dense: true,
+        onTap: () async {
           final prediction = allPredictions[index];
           widget.itmClick!(prediction);
           if (widget.getPlaceDetailWithLatLng != null) {
-            getPlaceDetailsFromPlaceId(prediction);
+            await getPlaceDetailsFromPlaceId(prediction);
           }
           removeOverlay();
         },
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          child: Text(
-            allPredictions[index].description!,
-            style: widget.predictionsStyle ?? widget.style,
-          ),
+        title: Text(
+          allPredictions[index].description!,
+          style: widget.predictionsStyle ?? widget.style,
         ),
       ),
     );
