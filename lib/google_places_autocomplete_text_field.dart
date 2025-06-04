@@ -284,6 +284,7 @@ class _GooglePlacesAutoCompleteTextFormFieldState
       proxiedUrl = offsetUri.toString() + actualUrl.toString();
     }
 
+    //debugPrint(proxiedUrl);
     final response = await _dio.get(proxiedUrl);
 
     final subscriptionResponse =
@@ -384,7 +385,7 @@ class _GooglePlacesAutoCompleteTextFormFieldState
           'key': widget.googleAPIKey,
         },
       );
-      debugPrint(actualUrl.toString());
+      //debugPrint(actualUrl.toString());
       String proxiedUrl;
       if (widget.proxyURL == null) {
         proxiedUrl = actualUrl.toString();
@@ -393,6 +394,7 @@ class _GooglePlacesAutoCompleteTextFormFieldState
         proxiedUrl = offsetUri.toString() + actualUrl.toString();
       }
 
+      //debugPrint(proxiedUrl);
       final response = await _dio.get(
         proxiedUrl,
       );
@@ -425,6 +427,7 @@ class _GooglePlacesAutoCompleteTextFormFieldState
         proxiedUrl = offsetUri.toString() + actualUrl.toString();
       }
 
+      //debugPrint(proxiedUrl);
       final response = await _dio.get(
         proxiedUrl,
       );
