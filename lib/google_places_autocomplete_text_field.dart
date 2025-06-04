@@ -281,15 +281,7 @@ class _GooglePlacesAutoCompleteTextFormFieldState
       proxiedUrl = actualUrl.toString();
     } else {
       final offsetUri = Uri.parse(widget.proxyURL!);
-      proxiedUrl = Uri(
-        scheme: offsetUri.scheme,
-        host: offsetUri.host,
-        port: offsetUri.port,
-        path: offsetUri.path,
-        queryParameters: {
-          'u': actualUrl.toString(),
-        },
-      ).toString();
+      proxiedUrl = offsetUri.toString() + actualUrl.toString();
     }
 
     final response = await _dio.get(proxiedUrl);
@@ -398,15 +390,7 @@ class _GooglePlacesAutoCompleteTextFormFieldState
         proxiedUrl = actualUrl.toString();
       } else {
         final offsetUri = Uri.parse(widget.proxyURL!);
-        proxiedUrl = Uri(
-          scheme: offsetUri.scheme,
-          host: offsetUri.host,
-          port: offsetUri.port,
-          path: offsetUri.path,
-          queryParameters: {
-            'u': actualUrl.toString(),
-          },
-        ).toString();
+        proxiedUrl = offsetUri.toString() + actualUrl.toString();
       }
 
       final response = await _dio.get(
@@ -438,15 +422,7 @@ class _GooglePlacesAutoCompleteTextFormFieldState
         proxiedUrl = actualUrl.toString();
       } else {
         final offsetUri = Uri.parse(widget.proxyURL!);
-        proxiedUrl = Uri(
-          scheme: offsetUri.scheme,
-          host: offsetUri.host,
-          port: offsetUri.port,
-          path: offsetUri.path,
-          queryParameters: {
-            'u': actualUrl.toString(),
-          },
-        ).toString();
+        proxiedUrl = offsetUri.toString() + actualUrl.toString();
       }
 
       final response = await _dio.get(
